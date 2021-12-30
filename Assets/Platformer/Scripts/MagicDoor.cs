@@ -2,24 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MagicDoor : MonoBehaviour
+namespace B2W.Platformer
 {
-    private bool canEnter = false;
-    private void OnTriggerEnter2D(Collider2D other)
+    public class MagicDoor : MonoBehaviour
     {
-        if(other.transform.tag == "Player")
+        private bool canEnter = false;
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            canEnter = true;
-            Debug.Log("Enter");
-            //other.gameObject.GetComponent<Player>
+            if (other.transform.tag == "Player")
+            {
+                canEnter = true;
+                Debug.Log("Enter");
+                other.gameObject.GetComponent<PlayerCharacter>().setBubbleText("fr can i enter now ?");
+            }
         }
-    }
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if(other.transform.tag == "Player")
+        private void OnTriggerExit2D(Collider2D other)
         {
-            canEnter = false;
-            Debug.Log("Leave");
+            if (other.transform.tag == "Player")
+            {
+                canEnter = false;
+                Debug.Log("Leave");
+                other.gameObject.GetComponent<PlayerCharacter>().disableBubble();
+
+            }
+        }
+
+        void Update()
+        {
+            if (canEnter && Input.GetKeyDown(KeyCode.E)){
+                Debug.Log("YEs i enter now");
+            }
         }
     }
 }
