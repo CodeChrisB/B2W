@@ -21,7 +21,7 @@ namespace B2W.Platformer
             if (other.transform.tag == "Player")
             {
                 canEnter = true;
-                other.gameObject.GetComponent<PlayerCharacter>().setBubbleText("fr can i enter now ?");
+                other.gameObject.GetComponent<PlayerCharacter>().setBubbleKey("E");
             }
         }
         private void OnTriggerExit2D(Collider2D other)

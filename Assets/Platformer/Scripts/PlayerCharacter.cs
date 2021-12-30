@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace B2W.Platformer
 {
@@ -19,6 +20,8 @@ namespace B2W.Platformer
         public bool invulnerable = false;
         public TMP_Text bubbleText;
         public GameObject bubble;
+        public Button bubbleButton;
+        public TMP_Text bubbleButtonText;
         public int MAX_BUBBLE_TEXT = 50;
 
         [Header("Movement")]
@@ -81,7 +84,7 @@ namespace B2W.Platformer
         private float grounded_timer = 0f;
         private float jump_timer = 0f;
         private float hit_timer = 0f;
-        private bool canShowBubble = true;
+
 
         private static Dictionary<int, PlayerCharacter> character_list = new Dictionary<int, PlayerCharacter>();
 
@@ -111,7 +114,7 @@ namespace B2W.Platformer
 
         void Start()
         {
-            setBubbleTextAsnc("Should be shown shortley How fucking long is to long ? WHAT IF I ADD EVEN MORE TEXT DOES IT NOW LOOK BAD=?", 5);
+           
         }
 
         //Handle physics
@@ -171,27 +174,39 @@ namespace B2W.Platformer
 
         public void setBubbleText(string text)
         {
-            if (!canShowBubble) return;
-
             if (text.Length > MAX_BUBBLE_TEXT) 
                 Debug.LogWarning("Bubble text is to long by " + (text.Length - MAX_BUBBLE_TEXT) +"characters");
+
             bubble.SetActive(true);
-            bubbleText.text = text;
+            bubbleButton.gameObject.SetActive(false);
+            bubbleText.gameObject.SetActive(true);
+            bubbleButtonText.text = text;
         }
 
-        public void setBubbleTextAsnc(string text,float time)
-        {
-            if (!canShowBubble) return;
+        //public void setBubbleTextAsnc(string text,float time)
+        //{
+        //    if (!canShowBubble) return;
+        //
+        //    setBubbleText(text);
+        //    canShowBubble = false;
+        //    LeanTween.delayedCall(time, disableBubble);
+        //}
 
-            setBubbleText(text);
-            canShowBubble = false;
-            LeanTween.delayedCall(time, disableBubble);
+        public void setBubbleKey(string key)
+        {
+            bubble.SetActive(true);
+
+            bubbleText.gameObject.SetActive(false);
+            bubbleButton.gameObject.SetActive(true);
+            bubbleButtonText.text = key;
         }
         public void disableBubble()
         {
             bubble.SetActive(false);
+            bubbleButton.gameObject.SetActive(false);
+            bubbleText.gameObject.SetActive(false);
             bubbleText.text = "";
-            canShowBubble = true;
+            bubbleButtonText.text = "";
         }
 
         private void UpdateJump()
