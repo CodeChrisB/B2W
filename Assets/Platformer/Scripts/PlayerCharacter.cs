@@ -19,6 +19,7 @@ namespace B2W.Platformer
         public bool invulnerable = false;
         public TMP_Text bubbleText;
         public GameObject bubble;
+        public int MAX_BUBBLE_TEXT = 50;
 
         [Header("Movement")]
         public float move_accel = 1f;
@@ -37,6 +38,7 @@ namespace B2W.Platformer
         public float jump_move_percent = 0.75f;
         public LayerMask ground_layer;
         public float ground_raycast_dist = 0.1f;
+
 
         [Header("Crouch")]
         public bool can_crouch = true;
@@ -79,7 +81,7 @@ namespace B2W.Platformer
         private float grounded_timer = 0f;
         private float jump_timer = 0f;
         private float hit_timer = 0f;
-
+        private bool canShowBubble = true;
 
         private static Dictionary<int, PlayerCharacter> character_list = new Dictionary<int, PlayerCharacter>();
 
@@ -109,7 +111,7 @@ namespace B2W.Platformer
 
         void Start()
         {
-            setBubbleText("I can enter");
+            setBubbleTextAsnc("Should be shown shortley How fucking long is to long ? WHAT IF I ADD EVEN MORE TEXT DOES IT NOW LOOK BAD=?", 5);
         }
 
         //Handle physics
@@ -169,13 +171,27 @@ namespace B2W.Platformer
 
         public void setBubbleText(string text)
         {
+            if (!canShowBubble) return;
+
+            if (text.Length > MAX_BUBBLE_TEXT) 
+                Debug.LogWarning("Bubble text is to long by " + (text.Length - MAX_BUBBLE_TEXT) +"characters");
             bubble.SetActive(true);
             bubbleText.text = text;
+        }
+
+        public void setBubbleTextAsnc(string text,float time)
+        {
+            if (!canShowBubble) return;
+
+            setBubbleText(text);
+            canShowBubble = false;
+            LeanTween.delayedCall(time, disableBubble);
         }
         public void disableBubble()
         {
             bubble.SetActive(false);
             bubbleText.text = "";
+            canShowBubble = true;
         }
 
         private void UpdateJump()
