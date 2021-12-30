@@ -1,12 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-
-/// <summary>
-/// Platformer character movement
-/// Author: Indie Marc (Marc-Antoine Desbiens)
-/// </summary>
 
 namespace B2W.Platformer
 {
@@ -21,6 +17,8 @@ namespace B2W.Platformer
 
         [Header("Status")]
         public bool invulnerable = false;
+        public TMP_Text bubbleText;
+        public GameObject bubble;
 
         [Header("Movement")]
         public float move_accel = 1f;
@@ -82,6 +80,7 @@ namespace B2W.Platformer
         private float jump_timer = 0f;
         private float hit_timer = 0f;
 
+
         private static Dictionary<int, PlayerCharacter> character_list = new Dictionary<int, PlayerCharacter>();
 
         void Awake()
@@ -110,7 +109,7 @@ namespace B2W.Platformer
 
         void Start()
         {
-
+            setBubbleText("I can enter");
         }
 
         //Handle physics
@@ -164,9 +163,19 @@ namespace B2W.Platformer
         {
             if (Mathf.Abs(move.x) > 0.01f)
             {
-                float side = (move.x < 0f) ? -1f : 1f;
-                transform.localScale = new Vector3(start_scale.x * side, start_scale.y, start_scale.z);
+                this.GetComponent<SpriteRenderer>().flipX = (move.x < 0f);
             }
+        }
+
+        public void setBubbleText(string text)
+        {
+            bubble.SetActive(true);
+            bubbleText.text = text;
+        }
+        public void disableBubble()
+        {
+            bubble.SetActive(false);
+            bubbleText.text = "";
         }
 
         private void UpdateJump()
@@ -397,15 +406,15 @@ namespace B2W.Platformer
                 return new Vector2(Mathf.Abs(transform.localScale.x) * capsule_coll.size.x, Mathf.Abs(transform.localScale.y) * capsule_coll.size.y);
             return new Vector2(Mathf.Abs(transform.localScale.x), Mathf.Abs(transform.localScale.y));
         }
-        
+
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (is_dead)
                 return;
-            
+
         }
 
-        public static PlayerCharacter GetNearest(Vector3 pos, float range = 99999f, bool alive_only=false)
+        public static PlayerCharacter GetNearest(Vector3 pos, float range = 99999f, bool alive_only = false)
         {
             PlayerCharacter nearest = null;
             float min_dist = range;
@@ -443,5 +452,4 @@ namespace B2W.Platformer
             return list;
         }
     }
-
 }
